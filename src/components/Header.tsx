@@ -1,13 +1,15 @@
-import React from 'react'
+import { Center, Text } from "@chakra-ui/react";
 
-interface HeaderProps {
-
-}
+interface HeaderProps {}
 
 const Header = () => {
-  return (
-    <div>Header</div>
-  )
-}
+	return (
+		<Center as="header" h={[70, 90]} backgroundColor="">
+			<Text as="h1" fontSize={[36, 54, 64]} fontWeight={100}>
+				One Weather
+			</Text>
+		</Center>
+	);
+};
 
-export default Header
+export default Header;
