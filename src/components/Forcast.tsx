@@ -1,11 +1,11 @@
-import React from 'react'
+import { useEffect } from "react";
 
-type Props = {}
+const Forcast = () => {
+	return (
+    <>
+    
+    </>
+  );
+};
 
-const Forcast = (props: Props) => {
-  return (
-    <div>Forcast</div>
-  )
-}
-
-export default Forcast
+export default Forcast;
