@@ -19,7 +19,7 @@ const Search = () => {
 	const toast = useToast();
 	const [search, setSearch] = useState<string>("");
 	const [coords, setCoords] = useState<Coords>();
-	const [loading, setLoading] = useState(false);
+	const [loading, setLoading] = useState<boolean>(false);
 	const [dataGeolocation, setDataGeolocation] = useState([]);
 	const [dataSearch, setDataSearch] = useState([]);
 
