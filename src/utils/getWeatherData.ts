@@ -5,9 +5,9 @@ export const getWeatherData = async (
 	lon?: number | null
 ) => {
     try {
-        const geolocation_url = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${process.env.NEXT_PUBLIC_API_URL}&units=metric&lang=ru&cnt=10`;
+        const geolocation_url = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${process.env.NEXT_PUBLIC_API_URL}&units=metric&lang=ru`;
 
-        const search_url = `https://api.openweathermap.org/data/2.5/forecast?q=${search}&appid=${process.env.NEXT_PUBLIC_API_URL}&units=metric&lang=ru&cnt=10`;
+        const search_url = `https://api.openweathermap.org/data/2.5/forecast?q=${search}&appid=${process.env.NEXT_PUBLIC_API_URL}&units=metric&lang=ru`;
 
         switch (type) {
             case 'geolocation':

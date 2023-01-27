@@ -1,7 +1,4 @@
 import { Center, Text } from "@chakra-ui/react";
-
-interface HeaderProps {}
-
 const Header = () => {
 	return (
 		<Center as="header" h={[70, 90]} backgroundColor="">

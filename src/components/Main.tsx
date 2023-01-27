@@ -1,26 +1,33 @@
 import Header from "./Header";
-import { Center, Box } from "@chakra-ui/react";
+import { Center, useColorMode } from "@chakra-ui/react";
 import Search from "./Search";
-import CardWeather from "./CardWeather";
-import Forcast from "./Forcast";
-type Props = {};
-
-const Main = (props: Props) => {
+import Forecast from "./Forecast";
+import City from "./City";
+const Main = () => {
+	const { colorMode } = useColorMode();
 	return (
 		<Center flexDirection="column" gap={10}>
 			<Header />
 			<Center
 				as="main"
-				justifyContent='start'
-				flexDirection='column'
+				justifyContent="start"
+				flexDirection="column"
+				overflow="hidden"
 				gap={10}
-				border={["none", "2px solid #1212"]}
-				w={["90vw", 650]}
+				border={[
+					"none",
+					`${
+						colorMode === "light"
+							? "2px solid #1212"
+							: "2px solid #fff7f2"
+					}`,
+				]}
+				w={["80vw", 650]}
 				h={450}
 				rounded={50}
 			>
 				<Search />
-				<Forcast/>
+				<Forecast />
 			</Center>
 		</Center>
 	);

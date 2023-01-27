@@ -1,14 +1,16 @@
 import {
-	InputLeftElement,
+	FormControl,
+	FormErrorMessage,
 	Input,
 	InputGroup,
-	IconButton,
+	InputLeftElement,
 	useToast,
 } from "@chakra-ui/react";
-import { BsSearch, BsGeoAlt } from "react-icons/bs";
-import { IoEnterOutline } from "react-icons/io5";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import { BsSearch } from "react-icons/bs";
+import { useDataContext } from "../context/useData";
 import { getWeatherData } from "../utils/getWeatherData";
+import Menu from "./Menu";
 
 interface Coords {
 	lat: number;
@@ -17,11 +19,13 @@ interface Coords {
 
 const Search = () => {
 	const toast = useToast();
+	const { setData } = useDataContext();
+
 	const [search, setSearch] = useState<string>("");
 	const [coords, setCoords] = useState<Coords>();
 	const [loading, setLoading] = useState<boolean>(false);
-	const [dataGeolocation, setDataGeolocation] = useState([]);
-	const [dataSearch, setDataSearch] = useState([]);
+
+	const [error, setError] = useState<boolean>(false);
 
 	useEffect(() => {
 		const getData = async () => {
@@ -35,7 +39,7 @@ const Search = () => {
 						coords.lat,
 						coords.lon
 					);
-					setDataGeolocation(response);
+					setData(response);
 				}
 			} catch (error) {
 				console.log("inside useEffect", error);
@@ -45,6 +49,7 @@ const Search = () => {
 	}, [coords]);
 
 	const handlGeolocation = () => {
+		setError(false);
 		navigator.geolocation.getCurrentPosition(
 			(position) => {
 				toast({
@@ -72,39 +77,66 @@ const Search = () => {
 
 	const handlSearch = async (city: string) => {
 		try {
-			setLoading(true)
-			const response = await getWeatherData("search", city)
-			setDataSearch(response)
-			setSearch('')
-			setLoading(false)
+			if (city.length <= 0) {
+				setError(true);
+			} else {
+				setLoading(true);
+				const town = city.trim().toLowerCase();
+				const response = await getWeatherData("search", town);
+				setData(response);
+				setSearch("");
+				setLoading(false);
+			}
 		} catch (error) {
-			console.log(error)
+			console.log("handlSearch", error);
 		}
 	};
-
-	console.log(dataSearch);
 	return (
-		<InputGroup mt={5} w={400} gap={3}>
-			<InputLeftElement>
-				<BsSearch />
-			</InputLeftElement>
-			<Input
-				placeholder="Найди свой город"
-				onChange={(e) => setSearch(e.target.value)}
-				value={search}
-			/>
-			<IconButton
-				aria-label="Enter"
-				icon={<IoEnterOutline />}
-				onClick={() => handlSearch(search)}
-				isLoading={loading}
-			/>
-			<IconButton
-				aria-label="Geolocation"
-				icon={<BsGeoAlt />}
-				onClick={handlGeolocation}
-			/>
-		</InputGroup>
+		<>
+			<FormControl
+				isInvalid={error}
+				width="none"
+			>
+				<InputGroup
+					mt={5}
+					w={["100%", 300]}
+					gap={3}
+					flexDirection={["column", "row"]}
+					flexWrap='wrap'
+				>
+					<InputLeftElement>
+						<BsSearch />
+					</InputLeftElement>
+					<Input
+						placeholder="Найди свой город"
+						onChange={(e) => {
+							setError(false);
+							setSearch(e.target.value);
+						}}
+						value={search}
+						onKeyUp={(e) => {
+							e.key === "Enter" ? handlSearch(search) : null;
+						}}
+					/>
+					{error ? (
+						<FormErrorMessage
+							position={["relative", "absolute"]}
+							bottom={"-50%"}
+							fontWeight={600}
+							mt={"0"}
+						>
+							Пожалуйста введи свой город
+						</FormErrorMessage>
+					) : null}
+					<Menu
+						handlGeolocation={handlGeolocation}
+						handlSearch={handlSearch}
+						loading={loading}
+						search={search}
+					/>
+				</InputGroup>
+			</FormControl>
+		</>
 	);
 };
 
