@@ -75,7 +75,7 @@ const Forecast = () => {
 			{Object.keys(dataForcast).length === 0 ? (
 				<Text>Введите свой город или предоставте геоданные</Text>
 			) : (
-				<Center w={"100%"} px={5} flexDirection='column'>
+				<Center w={"100%"} px={5} flexDirection="column">
 					<Box
 						ref={container}
 						display="flex"
@@ -109,7 +109,7 @@ const Forecast = () => {
 							</>
 						)}
 					</Box>
-					<WeatherNow/>
+					<WeatherNow />
 				</Center>
 			)}
 		</>

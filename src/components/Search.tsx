@@ -127,6 +127,7 @@ const Search = () => {
 						<BsSearch />
 					</InputLeftElement>
 					<Input
+						mb={3}
 						placeholder="Найди свой город"
 						onChange={(e) => {
 							setError(false);
@@ -140,7 +141,7 @@ const Search = () => {
 					{error ? (
 						<FormErrorMessage
 							position={["relative", "absolute"]}
-							bottom={"-50%"}
+							top={"25%"}
 							fontWeight={600}
 							mt={"0"}
 						>

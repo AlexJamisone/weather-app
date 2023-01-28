@@ -1,9 +1,8 @@
-import { ListForecast } from "../types/types";
-import { LineChart, XAxis, YAxis, Line, Tooltip } from "recharts";
+import { Center } from "@chakra-ui/react";
 import moment from "moment";
 import "moment/locale/ru";
-import { Center, IconButton } from "@chakra-ui/react";
-import { GoSettings } from "react-icons/go";
+import { Line, LineChart, Tooltip, XAxis, YAxis } from "recharts";
+import { ListForecast } from "../types/types";
 
 interface DailyWeatherProps {
 	data: ListForecast[][];
@@ -22,12 +21,11 @@ const DailyForecast = ({ data }: DailyWeatherProps) => {
 	);
 	const fromArr = [...toArrSingl[0]];
 	return (
-		<Center justifyContent="start" alignItems="flex-start">
-            <IconButton aria-label="Settings" icon={<GoSettings/>}/>
+		<Center>
 			<LineChart
 				data={fromArr}
 				width={500}
-				height={125}
+				height={150}
 				margin={{ bottom: 0, left: 0, right: 0, top: 0 }}
 			>
 				<XAxis dataKey="x" width={500} />
