@@ -8,8 +8,9 @@ import {
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { BsSearch } from "react-icons/bs";
-import { useDataContext } from "../context/useData";
-import { getWeatherData } from "../utils/getWeatherData";
+import { useDataForcastContext } from "../context/useDataForecast";
+import { useDataDailyContext } from "../context/useDataDaily";
+import { getForecastData } from "../utils/getForecastData";
 import Menu from "./Menu";
 
 interface Coords {
@@ -19,7 +20,8 @@ interface Coords {
 
 const Search = () => {
 	const toast = useToast();
-	const { setData } = useDataContext();
+	const { setDataForcast } = useDataForcastContext();
+	const { setDataDaily } = useDataDailyContext();
 
 	const [search, setSearch] = useState<string>("");
 	const [coords, setCoords] = useState<Coords>();
@@ -33,16 +35,25 @@ const Search = () => {
 				if (coords === undefined) {
 					return;
 				} else {
-					const response = await getWeatherData(
+					const forecast = await getForecastData(
+						"forecast",
 						"geolocation",
 						null,
 						coords.lat,
 						coords.lon
 					);
-					setData(response);
+					setDataForcast(forecast);
+					const weather = await getForecastData(
+						"weather",
+						"geolocation",
+						null,
+						coords.lat,
+						coords.lon
+					);
+					setDataDaily(weather)
 				}
 			} catch (error) {
-				console.log("inside useEffect", error);
+				console.log( error);
 			}
 		};
 		getData();
@@ -82,9 +93,20 @@ const Search = () => {
 			} else {
 				setLoading(true);
 				const town = city.trim().toLowerCase();
-				const response = await getWeatherData("search", town);
-				setData(response);
+				const forecast = await getForecastData(
+					"forecast",
+					"search",
+					town
+				);
+				setDataForcast(forecast);
+				const weather = await getForecastData(
+					'weather',
+					'search',
+					town
+				)
+				setDataDaily(weather)
 				setSearch("");
+
 				setLoading(false);
 			}
 		} catch (error) {
@@ -93,16 +115,13 @@ const Search = () => {
 	};
 	return (
 		<>
-			<FormControl
-				isInvalid={error}
-				width="none"
-			>
+			<FormControl isInvalid={error} width="none">
 				<InputGroup
 					mt={5}
 					w={["100%", 300]}
 					gap={3}
 					flexDirection={["column", "row"]}
-					flexWrap='wrap'
+					flexWrap="wrap"
 				>
 					<InputLeftElement>
 						<BsSearch />

@@ -1,14 +1,54 @@
-import { Box, Center, Text } from "@chakra-ui/react";
+import { Box, Center, IconButton, Text } from "@chakra-ui/react";
+import { useEffect, useRef, useState } from "react";
+import { IoArrowBackSharp } from "react-icons/io5";
+import { useDataForcastContext } from "../context/useDataForecast";
+import { useLocalStorage } from "../hooks/useLocalStorage";
+import { getForecastByDay } from "../utils/getForecastByDay";
+import { getForecastData } from "../utils/getForecastData";
+import { useDataDailyContext } from "../context/useDataDaily";
 import CardWeather from "./CardWeather";
-import { useRef } from "react";
-import { useDataContext } from "../context/useData";
+import DailyWeather from "./DailyForecast";
+import WeatherNow from "./WeatherNow";
 
 const Forecast = () => {
-	const { data } = useDataContext();
+	const { dataForcast, setDataForcast } = useDataForcastContext();
+	const { dataDaily, setDataDaily } = useDataDailyContext();
+
 	const container = useRef<HTMLDivElement>(null);
-	const forecast = data.list?.filter(
+	const [citys] = useLocalStorage("citys", []);
+	const [selctedDay, setSelctedDay] = useState<string>();
+
+	useEffect(() => {
+		if (citys.length !== 0) {
+			const getData = async () => {
+				try {
+					const forecast = await getForecastData(
+						"forecast",
+						"search",
+						citys.at(-1)
+					);
+					setDataForcast(forecast);
+					const weather = await getForecastData(
+						"weather",
+						"search",
+						citys.at(-1)
+					);
+					setDataDaily(weather);
+				} catch (error) {
+					console.log(error);
+				}
+			};
+			getData();
+		} else {
+			return;
+		}
+	}, []);
+
+	const forecast = dataForcast.list?.filter(
 		(_, index) => index === 0 || index % 8 === 0
 	);
+
+	const forecastByDay = getForecastByDay(dataForcast?.list, selctedDay);
 
 	const handlWheel = (e: React.WheelEvent<HTMLDivElement>) => {
 		if (!container.current) {
@@ -25,12 +65,17 @@ const Forecast = () => {
 			behavior: "smooth",
 		});
 	};
+
+	const handlDay = (day: string) => {
+		setSelctedDay(day);
+	};
+
 	return (
 		<>
-			{data === undefined ? (
+			{Object.keys(dataForcast).length === 0 ? (
 				<Text>Введите свой город или предоставте геоданные</Text>
 			) : (
-				<Center w={"100%"} px={5}>
+				<Center w={"100%"} px={5} flexDirection='column'>
 					<Box
 						ref={container}
 						display="flex"
@@ -44,12 +89,27 @@ const Forecast = () => {
 							},
 						}}
 					>
-						{forecast?.map((item, index) => (
-							<Box key={index}>
-								<CardWeather data={item} />
-							</Box>
-						))}
+						{selctedDay === undefined ? (
+							forecast?.map((day, index) => (
+								<Box
+									onClick={() => handlDay(day.dt.toString())}
+									key={index}
+								>
+									<CardWeather data={day} />
+								</Box>
+							))
+						) : (
+							<>
+								<IconButton
+									aria-label="Back"
+									icon={<IoArrowBackSharp />}
+									onClick={() => setSelctedDay(undefined)}
+								/>
+								<DailyWeather data={forecastByDay} />
+							</>
+						)}
 					</Box>
+					<WeatherNow/>
 				</Center>
 			)}
 		</>

@@ -1,4 +1,4 @@
-import { Box, Center, IconButton, useColorMode } from "@chakra-ui/react";
+import { IconButton, useColorMode } from "@chakra-ui/react";
 import { BsGeoAlt } from "react-icons/bs";
 import { IoEnterOutline } from "react-icons/io5";
 import { RiLightbulbLine, RiMoonLine } from "react-icons/ri";

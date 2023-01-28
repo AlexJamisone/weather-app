@@ -26,7 +26,7 @@ export interface ListForecast {
 	};
 }
 
-export interface DataApi {
+export interface DataApiForecast {
     cod: string
     city: {
         id: number

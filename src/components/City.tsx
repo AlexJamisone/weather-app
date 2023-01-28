@@ -1,15 +1,15 @@
 import { HStack, Icon, Text } from "@chakra-ui/react";
 import { Dispatch, SetStateAction } from "react";
 import { RiStarFill } from "react-icons/ri";
-import { useDataContext } from "../context/useData";
+import { useDataForcastContext } from "../context/useDataForecast";
 
 interface CityProps {
 	citys: string[];
-    setCity: Dispatch<SetStateAction<string[]>>
+	setCity: Dispatch<SetStateAction<string[]>>;
 }
 
-const City = ({citys, setCity}: CityProps) => {
-	const { data } = useDataContext();
+const City = ({ citys, setCity }: CityProps) => {
+	const { dataForcast } = useDataForcastContext();
 	const saveCity = (newCity: string) => {
 		if (citys?.includes(newCity)) {
 			setCity(citys?.filter((str) => str !== newCity));
@@ -19,7 +19,7 @@ const City = ({citys, setCity}: CityProps) => {
 	};
 	return (
 		<>
-			{Object.keys(data).length !== 0 ? (
+			{Object.keys(dataForcast).length !== 0 ? (
 				<HStack>
 					<Text
 						display="flex"
@@ -27,18 +27,20 @@ const City = ({citys, setCity}: CityProps) => {
 						as="h2"
 						fontSize={32}
 						fontWeight={300}
+						cursor="default"
 					>
-						{data?.city?.name}
+						{dataForcast?.city?.name}
 					</Text>
 					<Icon
 						as={RiStarFill}
 						boxSize={"30px"}
+						cursor="pointer"
 						fill={`${
-							citys?.includes(data?.city?.name)
+							citys?.includes(dataForcast?.city?.name)
 								? "yellow.400"
 								: ""
 						}`}
-						onClick={() => saveCity(data?.city?.name)}
+						onClick={() => saveCity(dataForcast?.city?.name)}
 					/>
 				</HStack>
 			) : null}

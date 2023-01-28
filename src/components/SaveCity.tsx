@@ -1,5 +1,4 @@
 import {
-	Box,
 	Drawer,
 	DrawerBody,
 	DrawerHeader,
@@ -11,10 +10,15 @@ import {
 	TagLabel,
 	useDisclosure,
 	IconButton,
+	Input,
+	InputGroup,
+	InputLeftElement,
 } from "@chakra-ui/react";
 import { RiStarFill } from "react-icons/ri";
 import City from "./City";
+import { useState } from "react";
 import { useLocalStorage } from "../hooks/useLocalStorage";
+import { BsSearch } from "react-icons/bs";
 
 interface SaveCityProps {
 	handlSearch: (city: string) => Promise<void>;
@@ -23,11 +27,16 @@ interface SaveCityProps {
 const SaveCity = ({ handlSearch }: SaveCityProps) => {
 	const { isOpen, onClose, onToggle } = useDisclosure();
 	const [citys, setCity] = useLocalStorage<string[]>("citys", []);
+	const [searchCity, setSearchCity] = useState<string>("");
 
 	const deletCity = (exisctingCity: string) => {
 		localStorage.removeItem(exisctingCity);
 		setCity(citys?.filter((str) => str !== exisctingCity));
 	};
+
+	const filtredCity = citys.filter((city) =>
+		city.toLowerCase().includes(searchCity.toLowerCase())
+	);
 	return (
 		<>
 			<IconButton
@@ -54,17 +63,28 @@ const SaveCity = ({ handlSearch }: SaveCityProps) => {
 					<DrawerCloseButton />
 					<DrawerHeader>Сохраненые города</DrawerHeader>
 					<DrawerBody>
-						{citys?.map((item: string, index: number) => (
+						<InputGroup mb={5}>
+							<InputLeftElement>
+								<BsSearch />
+							</InputLeftElement>
+							<Input
+								placeholder="Поиск по избранным"
+								onChange={(e) => setSearchCity(e.target.value)}
+							/>
+						</InputGroup>
+						{filtredCity?.map((item: string, index: number) => (
 							<Tag
 								borderRadius="full"
 								key={index}
 								size={["ld"]}
 								p={2}
-								mx={2}
+								m={2}
 								alignContent="center"
+								cursor='pointer'
 							>
 								<TagLabel
 									onClick={() => {
+										setSearchCity('')
 										onClose();
 										handlSearch(item);
 									}}
