@@ -5,14 +5,18 @@ import Forecast from "./Forecast";
 const Main = () => {
 	const { colorMode } = useColorMode();
 	return (
-		<Center flexDirection="column" gap={10}>
+		<Center
+			flexDirection="column"
+			gap={[0, 10]}
+			overflowY={["scroll", "hidden"]}
+		>
 			<Header />
 			<Center
 				as="main"
 				justifyContent="start"
 				flexDirection="column"
 				overflow="hidden"
-				gap={10}
+				gap={[5, 10]}
 				border={[
 					"none",
 					`${
@@ -21,8 +25,8 @@ const Main = () => {
 							: "2px solid #fff7f2"
 					}`,
 				]}
-				w={["80vw", 650]}
-				h={550}
+				w={["95vw", 650]}
+				h={['100vh',550]}
 				rounded={50}
 			>
 				<Search />

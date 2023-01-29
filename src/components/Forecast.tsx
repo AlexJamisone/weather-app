@@ -1,27 +1,29 @@
-import { Box, Center, IconButton, Text } from "@chakra-ui/react";
+import { Box, Center, IconButton, Text, Spinner } from "@chakra-ui/react";
 import { useEffect, useRef, useState } from "react";
 import { IoArrowBackSharp } from "react-icons/io5";
+import { useDataDailyContext } from "../context/useDataDaily";
 import { useDataForcastContext } from "../context/useDataForecast";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import { getForecastByDay } from "../utils/getForecastByDay";
 import { getForecastData } from "../utils/getForecastData";
-import { useDataDailyContext } from "../context/useDataDaily";
 import CardWeather from "./CardWeather";
 import DailyWeather from "./DailyForecast";
 import WeatherNow from "./WeatherNow";
 
 const Forecast = () => {
 	const { dataForcast, setDataForcast } = useDataForcastContext();
-	const { dataDaily, setDataDaily } = useDataDailyContext();
+	const { setDataDaily } = useDataDailyContext();
 
 	const container = useRef<HTMLDivElement>(null);
 	const [citys] = useLocalStorage("citys", []);
+	const [loading, setLoading] = useState(false);
 	const [selctedDay, setSelctedDay] = useState<string>();
 
 	useEffect(() => {
 		if (citys.length !== 0) {
 			const getData = async () => {
 				try {
+					setLoading(true);
 					const forecast = await getForecastData(
 						"forecast",
 						"search",
@@ -34,6 +36,7 @@ const Forecast = () => {
 						citys.at(-1)
 					);
 					setDataDaily(weather);
+					setLoading(false);
 				} catch (error) {
 					console.log(error);
 				}
@@ -72,14 +75,22 @@ const Forecast = () => {
 
 	return (
 		<>
-			{Object.keys(dataForcast).length === 0 ? (
+			{Object.keys(dataForcast).length === 0 && !loading ? (
 				<Text>Введите свой город или предоставте геоданные</Text>
+			) : loading ? (
+				<Spinner />
 			) : (
-				<Center w={"100%"} px={5} flexDirection="column">
+				<Center
+					w={["100%", "100%"]}
+					px={[0, 5]}
+					flexDirection="column"
+					gap={[5, 3]}
+				>
 					<Box
 						ref={container}
 						display="flex"
 						w={["100%"]}
+						h={"100%"}
 						overflowX="scroll"
 						gap={5}
 						onWheel={handlWheel}
@@ -94,6 +105,7 @@ const Forecast = () => {
 								<Box
 									onClick={() => handlDay(day.dt.toString())}
 									key={index}
+									w={["100vw", ""]}
 								>
 									<CardWeather data={day} />
 								</Box>

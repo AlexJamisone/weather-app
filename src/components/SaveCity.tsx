@@ -13,6 +13,7 @@ import {
 	Input,
 	InputGroup,
 	InputLeftElement,
+	useMediaQuery
 } from "@chakra-ui/react";
 import { RiStarFill } from "react-icons/ri";
 import City from "./City";
@@ -28,6 +29,7 @@ const SaveCity = ({ handlSearch }: SaveCityProps) => {
 	const { isOpen, onClose, onToggle } = useDisclosure();
 	const [citys, setCity] = useLocalStorage<string[]>("citys", []);
 	const [searchCity, setSearchCity] = useState<string>("");
+	const isMobile = useMediaQuery('(max-width: 478px)')
 
 	const deletCity = (exisctingCity: string) => {
 		localStorage.removeItem(exisctingCity);
@@ -47,8 +49,8 @@ const SaveCity = ({ handlSearch }: SaveCityProps) => {
 				_before={{
 					content: `"${citys.length !== 0 ? citys.length : "0"}"`,
 					position: `absolute`,
-					bottom: "-20%",
-					right: "-20%",
+					bottom: `-20%`,
+					right: `${isMobile ? '0' :"-20%"}`,
 					width: "20px",
 					height: "20px",
 					backgroundColor: "red.400",

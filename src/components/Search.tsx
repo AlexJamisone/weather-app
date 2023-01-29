@@ -35,6 +35,7 @@ const Search = () => {
 				if (coords === undefined) {
 					return;
 				} else {
+					setLoading(true)
 					const forecast = await getForecastData(
 						"forecast",
 						"geolocation",
@@ -51,6 +52,7 @@ const Search = () => {
 						coords.lon
 					);
 					setDataDaily(weather)
+					setLoading(false)
 				}
 			} catch (error) {
 				console.log( error);
@@ -141,7 +143,7 @@ const Search = () => {
 					{error ? (
 						<FormErrorMessage
 							position={["relative", "absolute"]}
-							top={"25%"}
+							top={"40%"}
 							fontWeight={600}
 							mt={"0"}
 						>

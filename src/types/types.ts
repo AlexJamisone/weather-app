@@ -24,6 +24,10 @@ export interface ListForecast {
 		deg: number;
 		gust: number;
 	};
+	sys: {
+		sunrise: number
+		sunset: number
+	}
 }
 
 export interface DataApiForecast {
