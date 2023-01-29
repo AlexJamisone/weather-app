@@ -1,14 +1,10 @@
 import {
-	Drawer,
-	DrawerBody,
-	DrawerContent,
-	DrawerCloseButton,
-	DrawerHeader,
-	DrawerOverlay,
-	Checkbox,
+	Checkbox, Drawer,
+	DrawerBody, DrawerCloseButton, DrawerContent, DrawerHeader,
+	DrawerOverlay
 } from "@chakra-ui/react";
-import { FilterState } from "./WeatherNow";
 import { Dispatch, SetStateAction } from "react";
+import { FilterState } from "./WeatherNow";
 
 interface SettingsProps {
 	isOpen: boolean;

@@ -1,9 +1,7 @@
 import React, {
-	createContext,
-	useContext,
-	useState,
-	Dispatch,
-	SetStateAction,
+	createContext, Dispatch,
+	SetStateAction, useContext,
+	useState
 } from "react";
 import { ListForecast } from "../types/types";
 

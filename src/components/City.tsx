@@ -1,4 +1,4 @@
-import { HStack, Icon, Text } from "@chakra-ui/react";
+import { Box, HStack, Icon, Text } from "@chakra-ui/react";
 import { Dispatch, SetStateAction } from "react";
 import { RiStarFill } from "react-icons/ri";
 import { useDataForcastContext } from "../context/useDataForecast";
@@ -35,6 +35,7 @@ const City = ({ citys, setCity }: CityProps) => {
 						as={RiStarFill}
 						boxSize={"30px"}
 						cursor="pointer"
+						transition={'fill .1s linear'}
 						fill={`${
 							citys?.includes(dataForcast?.city?.name)
 								? "yellow.400"

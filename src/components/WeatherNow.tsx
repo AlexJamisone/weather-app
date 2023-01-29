@@ -7,6 +7,7 @@ import {
 	Text,
 	useDisclosure,
 	VStack,
+	Stack,
 } from "@chakra-ui/react";
 import moment from "moment";
 import { BsSunrise, BsSunset } from "react-icons/bs";
@@ -46,6 +47,7 @@ const WeatherNow = () => {
 					Погода Сейчас
 				</Text>
 				<IconButton
+					size={["sm", "md"]}
 					aria-label="Settings"
 					icon={<GoSettings />}
 					onClick={onToggle}
@@ -53,13 +55,14 @@ const WeatherNow = () => {
 			</Center>
 			<Box
 				display="flex"
-				justifyContent="flex-end"
+				justifyContent="center"
 				alignItems="center"
 				cursor="default"
-				gap={5}
+				columnGap={[5]}
 				mr={[0, 3]}
 				fontSize={12}
 				w={["100%"]}
+				flexWrap={["wrap", "nowrap"]}
 			>
 				<VStack>
 					{humidity ? (
@@ -93,13 +96,13 @@ const WeatherNow = () => {
 					<Text>{`Max: ${Math.round(main?.temp_max)} ℃`}</Text>
 					<Text>{`Min: ${Math.round(main?.temp_min)} ℃`}</Text>
 				</VStack>
-				<VStack>
+				<Stack direction={["row", "column"]} alignItems="center">
 					<WeatherIcons main={weather?.[0].main} size={45} />
 					<Text fontSize={[9]} textTransform="uppercase">
 						{weather?.[0]?.description}
 					</Text>
-				</VStack>
-				<VStack>
+				</Stack>
+				<Stack direction={["row", "column"]} alignItems="center">
 					<HStack
 						borderBottom="1px solid #dfe2df"
 						_dark={{
@@ -114,13 +117,8 @@ const WeatherNow = () => {
 					<Text fontSize={[12]}>{`Ощущается ${Math.round(
 						main?.feels_like
 					)} ℃`}</Text>
-				</VStack>
+				</Stack>
 			</Box>
-			<Box
-				display="flex"
-				justifyContent="flex-start"
-				flexDirection="row"
-			></Box>
 			<Settings
 				isOpen={isOpen}
 				onClose={onClose}

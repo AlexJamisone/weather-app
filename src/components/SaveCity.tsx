@@ -1,36 +1,37 @@
 import {
 	Drawer,
 	DrawerBody,
+	DrawerCloseButton,
+	DrawerContent,
 	DrawerHeader,
 	DrawerOverlay,
-	DrawerContent,
-	DrawerCloseButton,
-	Tag,
-	TagCloseButton,
-	TagLabel,
-	useDisclosure,
-	IconButton,
 	Input,
 	InputGroup,
 	InputLeftElement,
-	useMediaQuery
+	Tag,
+	TagCloseButton,
+	TagLabel
 } from "@chakra-ui/react";
-import { RiStarFill } from "react-icons/ri";
-import City from "./City";
-import { useState } from "react";
-import { useLocalStorage } from "../hooks/useLocalStorage";
+import { Dispatch, SetStateAction, useState } from "react";
 import { BsSearch } from "react-icons/bs";
 
 interface SaveCityProps {
 	handlSearch: (city: string) => Promise<void>;
+	citys: string[];
+	setCity: Dispatch<SetStateAction<string[]>>;
+	isOpen: boolean;
+	onClose: () => void;
 }
+const SaveCity = ({
+	handlSearch,
+	citys,
+	setCity,
+	isOpen,
+	onClose,
+}: SaveCityProps) => {
 
-const SaveCity = ({ handlSearch }: SaveCityProps) => {
-	const { isOpen, onClose, onToggle } = useDisclosure();
-	const [citys, setCity] = useLocalStorage<string[]>("citys", []);
 	const [searchCity, setSearchCity] = useState<string>("");
-	const isMobile = useMediaQuery('(max-width: 478px)')
-
+	
 	const deletCity = (exisctingCity: string) => {
 		localStorage.removeItem(exisctingCity);
 		setCity(citys?.filter((str) => str !== exisctingCity));
@@ -39,26 +40,9 @@ const SaveCity = ({ handlSearch }: SaveCityProps) => {
 	const filtredCity = citys.filter((city) =>
 		city.toLowerCase().includes(searchCity.toLowerCase())
 	);
+
 	return (
 		<>
-			<IconButton
-				aria-label="Saves"
-				icon={<RiStarFill />}
-				onClick={onToggle}
-				position="relative"
-				_before={{
-					content: `"${citys.length !== 0 ? citys.length : "0"}"`,
-					position: `absolute`,
-					bottom: `-20%`,
-					right: `${isMobile ? '0' :"-20%"}`,
-					width: "20px",
-					height: "20px",
-					backgroundColor: "red.400",
-					opacity: `${citys.length !== 0 ? 1 : 0}`,
-					transition: "all .1s linear",
-					borderRadius: "50px",
-				}}
-			/>
 			<Drawer isOpen={isOpen} onClose={onClose} placement="right">
 				<DrawerOverlay />
 				<DrawerContent>
@@ -82,11 +66,11 @@ const SaveCity = ({ handlSearch }: SaveCityProps) => {
 								p={2}
 								m={2}
 								alignContent="center"
-								cursor='pointer'
+								cursor="pointer"
 							>
 								<TagLabel
 									onClick={() => {
-										setSearchCity('')
+										setSearchCity("");
 										onClose();
 										handlSearch(item);
 									}}
@@ -101,7 +85,6 @@ const SaveCity = ({ handlSearch }: SaveCityProps) => {
 					</DrawerBody>
 				</DrawerContent>
 			</Drawer>
-			<City citys={citys} setCity={setCity} />
 		</>
 	);
 };

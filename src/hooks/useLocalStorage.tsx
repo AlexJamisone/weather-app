@@ -4,7 +4,7 @@ type LocalStorageData<T> = [T, React.Dispatch<React.SetStateAction<T>>];
 
 export const useLocalStorage = <T,>(
 	key: string,
-	initialValue: T
+	initialValue: T,
 ): LocalStorageData<T> => {
 	const [state, setState] = useState<T>(() => {
 		if (typeof window !== "undefined") {

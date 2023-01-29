@@ -1,8 +1,9 @@
-import { Box, Center, IconButton, Text, Spinner } from "@chakra-ui/react";
+import { Box, Center, IconButton, Spinner, Text } from "@chakra-ui/react";
 import { useEffect, useRef, useState } from "react";
 import { IoArrowBackSharp } from "react-icons/io5";
 import { useDataDailyContext } from "../context/useDataDaily";
 import { useDataForcastContext } from "../context/useDataForecast";
+import { useLoaderContext } from "../context/useLoader";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import { getForecastByDay } from "../utils/getForecastByDay";
 import { getForecastData } from "../utils/getForecastData";
@@ -13,17 +14,17 @@ import WeatherNow from "./WeatherNow";
 const Forecast = () => {
 	const { dataForcast, setDataForcast } = useDataForcastContext();
 	const { setDataDaily } = useDataDailyContext();
+	const { loading } = useLoaderContext();
+	const { loadingData, loadingGeolocation } = loading;
 
 	const container = useRef<HTMLDivElement>(null);
 	const [citys] = useLocalStorage("citys", []);
-	const [loading, setLoading] = useState(false);
 	const [selctedDay, setSelctedDay] = useState<string>();
 
 	useEffect(() => {
 		if (citys.length !== 0) {
 			const getData = async () => {
 				try {
-					setLoading(true);
 					const forecast = await getForecastData(
 						"forecast",
 						"search",
@@ -36,7 +37,6 @@ const Forecast = () => {
 						citys.at(-1)
 					);
 					setDataDaily(weather);
-					setLoading(false);
 				} catch (error) {
 					console.log(error);
 				}
@@ -46,12 +46,6 @@ const Forecast = () => {
 			return;
 		}
 	}, []);
-
-	const forecast = dataForcast.list?.filter(
-		(_, index) => index === 0 || index % 8 === 0
-	);
-
-	const forecastByDay = getForecastByDay(dataForcast?.list, selctedDay);
 
 	const handlWheel = (e: React.WheelEvent<HTMLDivElement>) => {
 		if (!container.current) {
@@ -73,18 +67,24 @@ const Forecast = () => {
 		setSelctedDay(day);
 	};
 
+	const forecastCard = dataForcast.list?.filter(
+		(_, index) => index === 0 || index % 8 === 0
+	);
+
+	const forecastByDay = getForecastByDay(dataForcast?.list, selctedDay);
+
 	return (
 		<>
-			{Object.keys(dataForcast).length === 0 && !loading ? (
+			{Object.keys(dataForcast).length === 0 && !loadingData ? (
 				<Text>Введите свой город или предоставте геоданные</Text>
-			) : loading ? (
+			) : loadingData || loadingGeolocation ? (
 				<Spinner />
 			) : (
 				<Center
 					w={["100%", "100%"]}
 					px={[0, 5]}
 					flexDirection="column"
-					gap={[5, 3]}
+					gap={[1, 3]}
 				>
 					<Box
 						ref={container}
@@ -101,7 +101,7 @@ const Forecast = () => {
 						}}
 					>
 						{selctedDay === undefined ? (
-							forecast?.map((day, index) => (
+							forecastCard?.map((day, index) => (
 								<Box
 									onClick={() => handlDay(day.dt.toString())}
 									key={index}

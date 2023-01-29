@@ -1,4 +1,5 @@
 import {
+	Center,
 	FormControl,
 	FormErrorMessage,
 	Input,
@@ -8,8 +9,9 @@ import {
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { BsSearch } from "react-icons/bs";
-import { useDataForcastContext } from "../context/useDataForecast";
 import { useDataDailyContext } from "../context/useDataDaily";
+import { useDataForcastContext } from "../context/useDataForecast";
+import { useLoaderContext } from "../context/useLoader";
 import { getForecastData } from "../utils/getForecastData";
 import Menu from "./Menu";
 
@@ -22,10 +24,10 @@ const Search = () => {
 	const toast = useToast();
 	const { setDataForcast } = useDataForcastContext();
 	const { setDataDaily } = useDataDailyContext();
+	const { setLoading } = useLoaderContext();
 
 	const [search, setSearch] = useState<string>("");
 	const [coords, setCoords] = useState<Coords>();
-	const [loading, setLoading] = useState<boolean>(false);
 
 	const [error, setError] = useState<boolean>(false);
 
@@ -35,7 +37,7 @@ const Search = () => {
 				if (coords === undefined) {
 					return;
 				} else {
-					setLoading(true)
+					setLoading({ loadingGeolocation: true });
 					const forecast = await getForecastData(
 						"forecast",
 						"geolocation",
@@ -51,17 +53,18 @@ const Search = () => {
 						coords.lat,
 						coords.lon
 					);
-					setDataDaily(weather)
-					setLoading(false)
+					setDataDaily(weather);
+					setLoading({ loadingGeolocation: false });
 				}
 			} catch (error) {
-				console.log( error);
+				console.log(error);
 			}
 		};
 		getData();
 	}, [coords]);
 
 	const handlGeolocation = () => {
+		setLoading({ loadingGeolocation: true });
 		setError(false);
 		navigator.geolocation.getCurrentPosition(
 			(position) => {
@@ -75,6 +78,7 @@ const Search = () => {
 					lat: position.coords.latitude,
 					lon: position.coords.longitude,
 				});
+				setLoading({ loadingGeolocation: false });
 			},
 			(error) => {
 				console.log(error);
@@ -93,7 +97,7 @@ const Search = () => {
 			if (city.length <= 0) {
 				setError(true);
 			} else {
-				setLoading(true);
+				setLoading({ loadingData: true });
 				const town = city.trim().toLowerCase();
 				const forecast = await getForecastData(
 					"forecast",
@@ -102,22 +106,21 @@ const Search = () => {
 				);
 				setDataForcast(forecast);
 				const weather = await getForecastData(
-					'weather',
-					'search',
+					"weather",
+					"search",
 					town
-				)
-				setDataDaily(weather)
+				);
+				setDataDaily(weather);
 				setSearch("");
-
-				setLoading(false);
+				setLoading({ loadingData: false });
 			}
 		} catch (error) {
 			console.log("handlSearch", error);
 		}
 	};
 	return (
-		<>
-			<FormControl isInvalid={error} width="none">
+		<Center flexDirection='column'>
+			<FormControl isInvalid={error}>
 				<InputGroup
 					mt={5}
 					w={["100%", 300]}
@@ -143,22 +146,21 @@ const Search = () => {
 					{error ? (
 						<FormErrorMessage
 							position={["relative", "absolute"]}
-							top={"40%"}
+							top={"80%"}
 							fontWeight={600}
 							mt={"0"}
 						>
 							Пожалуйста введи свой город
 						</FormErrorMessage>
 					) : null}
-					<Menu
-						handlGeolocation={handlGeolocation}
-						handlSearch={handlSearch}
-						loading={loading}
-						search={search}
-					/>
 				</InputGroup>
 			</FormControl>
-		</>
+			<Menu
+				handlGeolocation={handlGeolocation}
+				handlSearch={handlSearch}
+				search={search}
+			/>
+		</Center>
 	);
 };
 

@@ -1,7 +1,7 @@
-import Header from "./Header";
 import { Center, useColorMode } from "@chakra-ui/react";
-import Search from "./Search";
 import Forecast from "./Forecast";
+import Header from "./Header";
+import Search from "./Search";
 const Main = () => {
 	const { colorMode } = useColorMode();
 	return (

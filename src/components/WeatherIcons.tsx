@@ -1,11 +1,6 @@
 import {
-	RiThunderstormsLine,
-	RiDrizzleLine,
-	RiRainyLine,
-	RiSnowyLine,
-	RiFoggyLine,
-	RiSunLine,
-	RiSunCloudyLine,
+	RiDrizzleLine, RiFoggyLine, RiRainyLine,
+	RiSnowyLine, RiSunCloudyLine, RiSunLine, RiThunderstormsLine
 } from "react-icons/ri";
 
 import { Icon } from "@chakra-ui/react";
