@@ -82,6 +82,7 @@ const Search = () => {
 			},
 			(error) => {
 				console.log(error);
+				setLoading({loadingGeolocation: false})
 				toast({
 					title: "You have denied access to geolocation!",
 					status: "error",

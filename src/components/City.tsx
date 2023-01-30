@@ -19,7 +19,7 @@ const City = ({ citys, setCity }: CityProps) => {
 	};
 	return (
 		<>
-			{Object.keys(dataForcast).length !== 0 ? (
+			{Object.keys(dataForcast).length !== 0 && dataForcast.cod !== '404' ? (
 				<HStack>
 					<Text
 						display="flex"

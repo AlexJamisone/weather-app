@@ -38,7 +38,7 @@ const Menu = ({ handlGeolocation, handlSearch, search }: MenuProps) => {
 	}, [citys]);
 
 	return (
-		<Center mt={[3, 1]} flexDirection={["column", "row"]} flexWrap="wrap">
+		<Center mt={[3, 5]} flexDirection={["column", "row"]} flexWrap="wrap" w={'100%'}>
 			<VStack direction={["column", "row"]} w={["100%"]}>
 				<Stack gap={3} direction={["column", "row"]} w={"100%"}>
 					<IconButton

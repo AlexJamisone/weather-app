@@ -79,6 +79,8 @@ const Forecast = () => {
 				<Text>Введите свой город или предоставте геоданные</Text>
 			) : loadingData || loadingGeolocation ? (
 				<Spinner />
+			) : dataForcast.cod === "404" ? (
+				<Text>Прости твой город не найден</Text>
 			) : (
 				<Center
 					w={["100%", "100%"]}
